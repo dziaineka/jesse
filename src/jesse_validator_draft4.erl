@@ -1030,12 +1030,15 @@ check_required(_Value, _InvalidRequired, State) ->
 
 check_required_values(_Value, [], State) -> State;
 check_required_values(Value, [PropertyName | Required], State) ->
+  io:format("~n~n check_required_values PropertyName ~n~n~p~n~n Value ~n~n~p~n~n", [PropertyName, Value]),
   case get_value(PropertyName, Value) =/= ?not_found of
     'false' ->
+      io:format("~n~n check_required_values false"),
       NewState =
         handle_data_invalid(?missing_required_property, PropertyName, State),
       check_required_values(Value, Required, NewState);
     'true' ->
+      io:format("~n~n check_required_values true"),
       check_required_values(Value, Required, State)
   end.
 
