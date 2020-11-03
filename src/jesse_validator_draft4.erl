@@ -1152,7 +1152,10 @@ check_any_of_(Value, [], State, Errors) ->
 check_any_of_(Value, [Schema | Schemas], State, Errors) ->
   ErrorsBefore = jesse_state:get_error_list(State),
   NumErrsBefore = length(ErrorsBefore),
-  case validate_schema(Value, Schema, State) of
+  io:format("~n~n check_any_of_ State ~n~n~p~n~n", [State]),
+  ValidateResult = validate_schema(Value, Schema, State),
+  io:format("~n~n check_any_of_ ValidateResult ~n~n~p~n~n", [ValidateResult]),
+  case ValidateResult of
     {true, NewState} ->
       ErrorsAfter = jesse_state:get_error_list(NewState),
       case length(ErrorsAfter) of
