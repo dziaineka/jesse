@@ -118,10 +118,17 @@ check_value( Value
            , State
            ) ->
   check_value(Value, Attrs, State);
-%% doesn't really do anything, since this attribute will be handled
-%% by the previous function clause if it's presented in the schema
-check_value(Value, [{?REQUIRED, _Required} | Attrs], State) ->
-  check_value(Value, Attrs, State);
+check_value(Value, [{?REQUIRED, Required} | Attrs], State) ->
+  case check_required(Required, Value) of
+    ok ->
+      check_value(Value, Attrs, State);
+
+    {error, PropertyName} ->
+      handle_data_invalid({?missing_required_property, PropertyName},
+                          Value,
+                          State)
+  end;
+
 check_value(Value, [{?DEPENDENCIES, Dependencies} | Attrs], State) ->
   NewState = case jesse_lib:is_json_object(Value) of
                true  -> check_dependencies(Value, Dependencies, State);
@@ -1052,3 +1059,30 @@ maybe_external_check_value(Value, State) ->
     Fun ->
       Fun(Value, State)
   end.
+
+%% @private
+check_required(Required, Value) when is_list(Required) and is_list(Value) ->
+  MissedItem = lists:foldl(
+    fun (RequiredProp, Item) ->
+      case proplists:is_defined(RequiredProp, Value) of
+        true ->
+          Item;
+
+        false ->
+          RequiredProp
+      end
+    end,
+    all_required_items_here,
+    Required
+  ),
+
+  case MissedItem of
+    all_required_items_here ->
+      ok;
+
+    MissedItem ->
+      {error, MissedItem}
+  end;
+
+check_required(_, _) ->
+  ok.
