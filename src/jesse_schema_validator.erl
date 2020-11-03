@@ -41,6 +41,7 @@
               ) -> {ok, jesse:json_term()}
                  | no_return().
 validate(JsonSchema, Value, Options) when is_map(JsonSchema) ->
+  io:format("~n~n validate JsonSchema converted"),
   validate(maps:to_list(JsonSchema), Value, Options);
 validate(JsonSchema, Value, Options) ->
   State = jesse_state:new(JsonSchema, Options),
