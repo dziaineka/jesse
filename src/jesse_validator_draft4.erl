@@ -82,6 +82,7 @@
                  ) -> jesse_state:state() | no_return().
 check_value(Value, [{?REF, RefSchemaURI} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value REF"),
+  io:format("~n~n jesse_validator_draft4 check_value REF current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
 
   case Attrs of
     [] ->
@@ -91,10 +92,12 @@ check_value(Value, [{?REF, RefSchemaURI} | Attrs], State) ->
   end;
 check_value(Value, [{?TYPE, Type} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value TYPE"),
+  io:format("~n~n jesse_validator_draft4 check_value TYPE current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = check_type(Value, Type, State),
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?PROPERTIES, Properties} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value PROPERTIES"),
+  io:format("~n~n jesse_validator_draft4 check_value PROPERTIES current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
 
   NewState = case jesse_lib:is_json_object(Value) of
                true  -> check_properties( Value
@@ -109,6 +112,7 @@ check_value( Value
            , State
            ) ->
   io:format("~n~n jesse_validator_draft4 check_value PATTERNPROPERTIES"),
+  io:format("~n~n jesse_validator_draft4 check_value PATTERNPROPERTIES current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
 
   NewState = case jesse_lib:is_json_object(Value) of
                true  -> check_pattern_properties( Value
@@ -123,6 +127,7 @@ check_value( Value
            , State
            ) ->
   io:format("~n~n jesse_validator_draft4 check_value ADDITIONALPROPERTIES"),
+  io:format("~n~n jesse_validator_draft4 check_value ADDITIONALPROPERTIES current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
 
   NewState = case jesse_lib:is_json_object(Value) of
                true  -> check_additional_properties( Value
@@ -134,6 +139,7 @@ check_value( Value
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?ITEMS, Items} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value ITEMS"),
+  io:format("~n~n jesse_validator_draft4 check_value ITEMS current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
 
   NewState = case jesse_lib:is_array(Value) of
                true  -> check_items(Value, Items, State);
@@ -147,10 +153,12 @@ check_value( Value
            , State
            ) ->
   io:format("~n~n jesse_validator_draft4 check_value ADDITIONALITEMS"),
+  io:format("~n~n jesse_validator_draft4 check_value ADDITIONALITEMS current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
 
   check_value(Value, Attrs, State);
 check_value(Value, [{?REQUIRED, Required} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value REQUIRED"),
+  io:format("~n~n jesse_validator_draft4 check_value REQUIRED current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
 
   NewState = case jesse_lib:is_json_object(Value) of
                true  -> check_required(Value, Required, State);
@@ -159,6 +167,7 @@ check_value(Value, [{?REQUIRED, Required} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?DEPENDENCIES, Dependencies} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value DEPENDENCIES"),
+  io:format("~n~n jesse_validator_draft4 check_value DEPENDENCIES current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case jesse_lib:is_json_object(Value) of
                true  -> check_dependencies(Value, Dependencies, State);
                false -> State
@@ -166,6 +175,7 @@ check_value(Value, [{?DEPENDENCIES, Dependencies} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?MINIMUM, Minimum} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value MINIMUM"),
+  io:format("~n~n jesse_validator_draft4 check_value MINIMUM current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case is_number(Value) of
                true  ->
                  ExclusiveMinimum = get_value( ?EXCLUSIVEMINIMUM
@@ -178,6 +188,7 @@ check_value(Value, [{?MINIMUM, Minimum} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?MAXIMUM, Maximum} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value MAXIMUM"),
+  io:format("~n~n jesse_validator_draft4 check_value MAXIMUM current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case is_number(Value) of
                true  ->
                  ExclusiveMaximum = get_value( ?EXCLUSIVEMAXIMUM
@@ -195,6 +206,7 @@ check_value( Value
            , State
            ) ->
   io:format("~n~n jesse_validator_draft4 check_value EXCLUSIVEMINIMUM"),
+  io:format("~n~n jesse_validator_draft4 check_value EXCLUSIVEMINIMUM current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   check_value(Value, Attrs, State);
 %% doesn't really do anything, since this attribute will be handled
 %% by the previous function clause if it's presented in the schema
@@ -203,9 +215,11 @@ check_value( Value
            , State
            ) ->
   io:format("~n~n jesse_validator_draft4 check_value EXCLUSIVEMAXIMUM"),
+  io:format("~n~n jesse_validator_draft4 check_value EXCLUSIVEMAXIMUM current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   check_value(Value, Attrs, State);
 check_value(Value, [{?MINITEMS, MinItems} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value MINITEMS"),
+  io:format("~n~n jesse_validator_draft4 check_value MINITEMS current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case jesse_lib:is_array(Value) of
                true  -> check_min_items(Value, MinItems, State);
                false -> State
@@ -213,6 +227,7 @@ check_value(Value, [{?MINITEMS, MinItems} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?MAXITEMS, MaxItems} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value MAXITEMS"),
+  io:format("~n~n jesse_validator_draft4 check_value MAXITEMS current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case jesse_lib:is_array(Value) of
                true  -> check_max_items(Value, MaxItems, State);
                false -> State
@@ -220,6 +235,7 @@ check_value(Value, [{?MAXITEMS, MaxItems} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?UNIQUEITEMS, Uniqueitems} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value UNIQUEITEMS"),
+  io:format("~n~n jesse_validator_draft4 check_value UNIQUEITEMS current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case jesse_lib:is_array(Value) of
                true  -> check_unique_items(Value, Uniqueitems, State);
                false -> State
@@ -227,6 +243,7 @@ check_value(Value, [{?UNIQUEITEMS, Uniqueitems} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?PATTERN, Pattern} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value PATTERN"),
+  io:format("~n~n jesse_validator_draft4 check_value PATTERN current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case is_binary(Value) of
                true  -> check_pattern(Value, Pattern, State);
                false -> State
@@ -234,6 +251,7 @@ check_value(Value, [{?PATTERN, Pattern} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?MINLENGTH, MinLength} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value MINLENGTH"),
+  io:format("~n~n jesse_validator_draft4 check_value MINLENGTH current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case is_binary(Value) of
                true  -> check_min_length(Value, MinLength, State);
                false -> State
@@ -241,6 +259,7 @@ check_value(Value, [{?MINLENGTH, MinLength} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?MAXLENGTH, MaxLength} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value MAXLENGTH"),
+  io:format("~n~n jesse_validator_draft4 check_value MAXLENGTH current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case is_binary(Value) of
                true  -> check_max_length(Value, MaxLength, State);
                false -> State
@@ -248,14 +267,17 @@ check_value(Value, [{?MAXLENGTH, MaxLength} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?ENUM, Enum} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value ENUM"),
+  io:format("~n~n jesse_validator_draft4 check_value ENUM current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = check_enum(Value, Enum, State),
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?FORMAT, Format} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value FORMAT"),
+  io:format("~n~n jesse_validator_draft4 check_value FORMAT current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = check_format(Value, Format, State),
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?MULTIPLEOF, Multiple} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value MULTIPLEOF"),
+  io:format("~n~n jesse_validator_draft4 check_value MULTIPLEOF current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case is_number(Value) of
                true  -> check_multiple_of(Value, Multiple, State);
                false -> State
@@ -263,6 +285,7 @@ check_value(Value, [{?MULTIPLEOF, Multiple} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?MAXPROPERTIES, MaxProperties} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value MAXPROPERTIES"),
+  io:format("~n~n jesse_validator_draft4 check_value MAXPROPERTIES current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case jesse_lib:is_json_object(Value) of
                true  -> check_max_properties(Value, MaxProperties, State);
                false -> State
@@ -270,6 +293,7 @@ check_value(Value, [{?MAXPROPERTIES, MaxProperties} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?MINPROPERTIES, MinProperties} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value MINPROPERTIES"),
+  io:format("~n~n jesse_validator_draft4 check_value MINPROPERTIES current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = case jesse_lib:is_json_object(Value) of
                true  -> check_min_properties(Value, MinProperties, State);
                false -> State
@@ -277,22 +301,27 @@ check_value(Value, [{?MINPROPERTIES, MinProperties} | Attrs], State) ->
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?ALLOF, Schemas} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value ALLOF"),
+  io:format("~n~n jesse_validator_draft4 check_value ALLOF current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = check_all_of(Value, Schemas, State),
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?ANYOF, Schemas} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value ANYOF"),
+  io:format("~n~n jesse_validator_draft4 check_value ANYOF current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = check_any_of(Value, Schemas, State),
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?ONEOF, Schemas} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value ONEOF"),
+  io:format("~n~n jesse_validator_draft4 check_value ONEOF current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = check_one_of(Value, Schemas, State),
   check_value(Value, Attrs, NewState);
 check_value(Value, [{?NOT, Schema} | Attrs], State) ->
   io:format("~n~n jesse_validator_draft4 check_value NOT"),
+  io:format("~n~n jesse_validator_draft4 check_value NOT current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   NewState = check_not(Value, Schema, State),
   check_value(Value, Attrs, NewState);
 check_value(Value, [], State) ->
   io:format("~n~n jesse_validator_draft4 check_value UNIQUEITEMS"),
+  io:format("~n~n jesse_validator_draft4 check_value UNIQUEITEMS current_schema ~n~n~p~n~n", [jesse_state:get_current_schema(State)]),
   maybe_external_check_value(Value, State);
 check_value(Value, [_Attr | Attrs], State) ->
   check_value(Value, Attrs, State).
