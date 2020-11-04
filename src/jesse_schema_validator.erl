@@ -56,6 +56,7 @@ validate(JsonSchema, Value, Options) ->
                             | no_return().
 validate_with_state(JsonSchema, Value, State) ->
   SchemaVer = get_schema_ver(JsonSchema, State),
+  io:format("~n~n jesse_schema_validator validate_with_state SchemaVer ~n~n~p~n~n", [SchemaVer]),
   select_and_run_validator(SchemaVer, JsonSchema, Value, State).
 
 %%% Internal functions
