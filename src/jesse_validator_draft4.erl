@@ -1032,6 +1032,8 @@ check_required_values(_Value, [], State) -> State;
 check_required_values(Value, [PropertyName | Required], State) ->
   io:format("~n~n check_required_values PropertyName ~n~n~p~n~n Value ~n~n~p~n~n", [PropertyName, Value]),
   erlang:system_flag(backtrace_depth, 100),
+  io:format("~n~n check_required_values stacktrace ~n~n~p~n~n", [erlang:process_info(self(), current_stacktrace)]),
+
   Result = get_value(PropertyName, Value),
   case Result =/= ?not_found of
     'false' ->
