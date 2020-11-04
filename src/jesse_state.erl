@@ -173,9 +173,13 @@ set_allowed_errors(#state{} = State, AllowedErrors) ->
 -spec set_current_schema( State :: state()
                         , NewSchema :: jesse:schema()
                         ) -> state().
-set_current_schema(#state{id = Id} = State, NewSchema) ->
+set_current_schema(#state{id = Id, default_schema_ver = DefaultSchemaVer} = State,
+                   NewSchema) ->
   NewId = combine_id(Id, jesse_json_path:value(?ID, NewSchema, undefined)),
-  State#state{current_schema = NewSchema, id = NewId}.
+
+  State#state{current_schema = NewSchema,
+              id = NewId,
+              default_schema_ver = DefaultSchemaVer}.
 
 %% @doc Setter for `error_list'.
 -spec set_error_list( State :: state()
