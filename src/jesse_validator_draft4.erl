@@ -1322,7 +1322,10 @@ validate_schema(Value, Schema, State0) ->
 
 %% @private
 validate_ref(Value, Reference, State) ->
-  case resolve_ref(Reference, State) of
+  Result = resolve_ref(Reference, State),
+  io:format("~n~n jesse_validator_draft4 validate_ref Result ~n~n~p~n~n", [Result]),
+
+  case Result of
     {error, NewState} ->
       undo_resolve_ref(NewState, State);
     {ok, NewState, Schema} ->
