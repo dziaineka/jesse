@@ -206,6 +206,7 @@ validate(Schema, Data) ->
                  | jesse_database:error().
 validate(Schema, Data, Options) ->
   try
+    io:format("~n~n jesse validate Schema ~n~n~p~n~n Data ~n~n~p~n~n Options ~n~n~p~n~n", [Schema, Data, Options]),
     ParserFun = proplists:get_value(parser_fun, Options, fun(X) -> X end),
     ParsedData = try_parse(data, ParserFun, Data),
     JsonSchema = jesse_database:load(Schema),

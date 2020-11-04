@@ -193,9 +193,6 @@ resolve_ref(State, Reference) ->
                                 , <<$#>>
                                 , [{return, binary}, unicode]
                                 ),
-
-  io:format("~n~n resolve_ref Id ~n~n~p~n~n CanonicalReference ~n~n~p~n~n BaseURI ~n~n~p~n~n Pointer ~n~n~p~n~n", [Id, CanonicalReference, BaseURI, Pointer]),
-
   IsLocalReference =
     case Id of
       undefined ->
@@ -204,11 +201,8 @@ resolve_ref(State, Reference) ->
         binary_to_list(BaseURI) =:= Id
     end,
 
-  io:format("~n~n resolve_ref1 IsLocalReference ~n~n~p~n~n", [IsLocalReference]),
-
   case IsLocalReference of
     true ->
-      io:format("~n~n resolve_ref2 Pointer ~n~n~p~n~n", [Pointer]),
       Path = jesse_json_path:parse(Pointer),
       case load_local_schema(State#state.root_schema, Path) of
         ?not_found ->
@@ -221,8 +215,6 @@ resolve_ref(State, Reference) ->
       end;
     false ->
       Result = load_schema(State, BaseURI),
-      io:format("~n~n resolve_ref3 Result ~n~n~p~n~n", [Result]),
-
       case Result of
         ?not_found ->
           jesse_error:handle_schema_invalid( { ?schema_not_found
